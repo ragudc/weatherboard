@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils"
 import { SearchBar } from "@/components/weather/SearchBar"
+import { ThemeToggle } from "@/components/layout/ThemeToggle"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
@@ -23,7 +24,7 @@ interface HeaderProps {
  * - Mobile: logo | toggle °F/°C (SearchBar debajo del header)
  * - md+: logo | SearchBar expandida | toggle °F/°C
  *
- * TODO Sprint 5: Agregar ThemeToggle (dark/light mode manual)
+ * - ThemeToggle (Sun/Moon) con next-themes, default light
  */
 export function Header({
   unit,
@@ -103,6 +104,10 @@ export function Header({
             °C
           </Label>
         </div>
+
+        {/* ─── Separator + ThemeToggle ──────────────────────────── */}
+        <Separator orientation="vertical" className="h-6" />
+        <ThemeToggle />
 
       </div>
 
