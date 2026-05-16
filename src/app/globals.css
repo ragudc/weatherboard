@@ -4,6 +4,27 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ─── Breakpoints personalizados WeatherBoard ──────────────────────
+   xs   → 320px  (mobile pequeño, iPhone SE)
+   sm   → 640px  (mobile grande / landscape)  — Tailwind default
+   md   → 768px  (tablet)                     — Tailwind default
+   lg   → 1024px (laptop)                     — Tailwind default
+   xl   → 1280px (desktop)                    — Tailwind default
+   2xl  → 1536px (monitor grande)             — Tailwind default
+──────────────────────────────────────────────────────────────────── */
+@theme {
+  --breakpoint-xs: 20rem;     /* 320px */
+  --breakpoint-sm: 40rem;     /* 640px */
+  --breakpoint-md: 48rem;     /* 768px */
+  --breakpoint-lg: 64rem;     /* 1024px */
+  --breakpoint-xl: 80rem;     /* 1280px */
+  --breakpoint-2xl: 96rem;    /* 1536px */
+
+  /* ─── Fuentes del proyecto ───────────────────────────────────── */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -81,6 +102,15 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.129 0.042 264.695);
+
+  /* ─── Variables de condición climática (light mode) ─────────── */
+  --weather-sunny: oklch(0.78 0.17 80);        /* Amber para sol */
+  --weather-cloudy: oklch(0.65 0.04 240);      /* Gris azulado para nubes */
+  --weather-rainy: oklch(0.55 0.13 240);       /* Azul para lluvia */
+  --weather-stormy: oklch(0.45 0.18 295);      /* Púrpura para tormenta */
+  --weather-snowy: oklch(0.78 0.08 215);       /* Azul claro para nieve */
+  --weather-night: oklch(0.22 0.06 265);       /* Azul marino para noche */
+  --weather-foggy: oklch(0.72 0.02 240);       /* Gris claro para niebla */
 }
 
 .dark {
@@ -115,16 +145,47 @@
   --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
   --sidebar-border: oklch(0.279 0.041 260.031);
   --sidebar-ring: oklch(0.869 0.022 252.894);
+
+  /* ─── Variables de condición climática (dark mode) ──────────── */
+  --weather-sunny: oklch(0.85 0.17 80);
+  --weather-cloudy: oklch(0.55 0.04 240);
+  --weather-rainy: oklch(0.62 0.13 240);
+  --weather-stormy: oklch(0.58 0.18 295);
+  --weather-snowy: oklch(0.82 0.08 215);
+  --weather-night: oklch(0.15 0.06 265);
+  --weather-foggy: oklch(0.55 0.02 240);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    /* NUNCA agregar overflow-x: hidden aquí */
   }
+
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
+  }
+
+  /* Scrollbar personalizada (webkit) */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
   }
 }
