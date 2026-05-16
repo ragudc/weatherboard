@@ -2,6 +2,7 @@ import {
   AirPollutionResponse,
   CurrentWeatherResponse,
   ForecastResponse,
+  GeocodingResult,
   TemperatureUnit,
   WeatherApiError,
 } from "@/types/weather"
@@ -89,4 +90,19 @@ export const getAirPollution = async (
     appid: apiKey,
   })
   return fetchFromOWM<AirPollutionResponse>(url)
+}
+
+// ─── Endpoint 4: Reverse Geocoding (coords → ciudad) ─────────────
+export const reverseGeocode = async (
+  lat: number,
+  lon: number
+): Promise<GeocodingResult[]> => {
+  const apiKey = getApiKey()
+  const url = buildUrl("/geo/1.0/reverse", {
+    lat,
+    lon,
+    limit: 1,
+    appid: apiKey,
+  })
+  return fetchFromOWM<GeocodingResult[]>(url)
 }

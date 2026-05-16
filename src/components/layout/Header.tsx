@@ -1,28 +1,44 @@
 "use client"
 
 import { cn } from "@/lib/utils"
+import { SearchBar } from "@/components/weather/SearchBar"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
 import type { TemperatureUnit } from "@/types/weather"
 
 interface HeaderProps {
   unit: TemperatureUnit
   onUnitChange: (unit: TemperatureUnit) => void
   onSearch: (city: string) => void
+  isSearchLoading?: boolean
+  currentCity?: string | null
   className?: string
 }
 
 /**
  * Header — Barra de navegación principal de WeatherBoard
  *
- * Contiene:
- * - Logo / nombre de la app
- * - SearchBar (componente a implementar en Sprint 3)
- * - Toggle de unidades °F / °C
- * - Toggle de tema (dark / light)
+ * Layout responsive:
+ * - Mobile: logo | toggle °F/°C (SearchBar debajo del header)
+ * - md+: logo | SearchBar expandida | toggle °F/°C
  *
- * TODO Sprint 3: Implementar SearchBar dentro del Header
- * TODO Sprint 5: Implementar ThemeToggle y UI completa
+ * TODO Sprint 5: Agregar ThemeToggle (dark/light mode manual)
  */
-export function Header({ unit, onUnitChange, onSearch, className }: HeaderProps) {
+export function Header({
+  unit,
+  onUnitChange,
+  onSearch,
+  isSearchLoading = false,
+  currentCity,
+  className,
+}: HeaderProps) {
+  const isImperial = unit === "imperial"
+
+  const handleUnitToggle = (checked: boolean) => {
+    onUnitChange(checked ? "metric" : "imperial")
+  }
+
   return (
     <header
       className={cn(
@@ -30,29 +46,74 @@ export function Header({ unit, onUnitChange, onSearch, className }: HeaderProps)
         className
       )}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
-        <div className="flex items-center gap-2">
-          <span className="text-lg font-bold tracking-tight">
-            🌤️ WeatherBoard
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
+
+        {/* ─── Logo ────────────────────────────────────────────── */}
+        <div className="flex shrink-0 items-center gap-2">
+          <span className="text-xl select-none" aria-hidden="true">🌤️</span>
+          <span className="text-base font-bold tracking-tight hidden xs:inline">
+            WeatherBoard
           </span>
         </div>
 
-        {/* SearchBar placeholder — Sprint 3 */}
-        <div className="hidden md:flex flex-1 max-w-md mx-6">
-          <div className="h-9 w-full rounded-md border border-input bg-muted/50 px-3 flex items-center">
-            <span className="text-sm text-muted-foreground">
-              Search city... (Sprint 3)
-            </span>
-          </div>
+        {/* ─── SearchBar (solo md+) ─────────────────────────────── */}
+        <div className="hidden md:flex flex-1 max-w-md">
+          <SearchBar
+            onSearch={onSearch}
+            isLoading={isSearchLoading}
+            defaultValue={currentCity ?? ""}
+            className="w-full"
+          />
         </div>
 
-        {/* Controls placeholder — Sprint 5 */}
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-muted-foreground border border-border rounded px-2 py-1">
-            {unit === "imperial" ? "°F" : "°C"}
-          </span>
+        {/* Spacer en mobile */}
+        <div className="flex-1 md:hidden" />
+
+        {/* ─── Separator ───────────────────────────────────────── */}
+        <Separator orientation="vertical" className="h-6 hidden md:block" />
+
+        {/* ─── Toggle °F / °C ──────────────────────────────────── */}
+        <div
+          className="flex shrink-0 items-center gap-2"
+          role="group"
+          aria-label="Temperature unit toggle"
+        >
+          <Label
+            htmlFor="unit-toggle"
+            className={cn(
+              "text-sm font-medium cursor-pointer select-none",
+              isImperial ? "text-foreground" : "text-muted-foreground"
+            )}
+          >
+            °F
+          </Label>
+          <Switch
+            id="unit-toggle"
+            checked={!isImperial}
+            onCheckedChange={handleUnitToggle}
+            aria-label={`Switch to ${isImperial ? "Celsius" : "Fahrenheit"}`}
+          />
+          <Label
+            htmlFor="unit-toggle"
+            className={cn(
+              "text-sm font-medium cursor-pointer select-none",
+              !isImperial ? "text-foreground" : "text-muted-foreground"
+            )}
+          >
+            °C
+          </Label>
         </div>
+
+      </div>
+
+      {/* ─── SearchBar mobile (bajo el header) ───────────────────── */}
+      <div className="md:hidden border-t border-border px-4 py-2">
+        <SearchBar
+          onSearch={onSearch}
+          isLoading={isSearchLoading}
+          defaultValue={currentCity ?? ""}
+          className="w-full"
+        />
       </div>
     </header>
   )

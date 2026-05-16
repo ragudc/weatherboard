@@ -1,106 +1,166 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect } from "react"
 import { Header } from "@/components/layout/Header"
 import { Footer } from "@/components/layout/Footer"
+import { EmptyState } from "@/components/weather/EmptyState"
+import { ErrorState } from "@/components/weather/ErrorState"
+import { CurrentWeather, CurrentWeatherSkeleton } from "@/components/weather/CurrentWeather"
+import { WeatherStats, WeatherStatsSkeleton } from "@/components/weather/WeatherStats"
+import { HourlyForecast, HourlyForecastSkeleton } from "@/components/weather/HourlyForecast"
+import { DailyForecast, DailyForecastSkeleton } from "@/components/weather/DailyForecast"
+import { TemperatureChart, TemperatureChartSkeleton } from "@/components/weather/TemperatureChart"
+import { WeatherAlerts } from "@/components/weather/WeatherAlerts"
+import { AirQuality, AirQualitySkeleton } from "@/components/weather/AirQuality"
+import { useWeather } from "@/hooks/useWeather"
+import { useTemperatureUnit } from "@/hooks/useTemperatureUnit"
+import { useGeolocation } from "@/hooks/useGeolocation"
 import type { TemperatureUnit } from "@/types/weather"
 
-/**
- * Home Page — Página principal de WeatherBoard
- *
- * Estructura de layout:
- * ┌─────────────────────────────────────┐
- * │  Header (sticky)                    │
- * ├─────────────────────────────────────┤
- * │  Hero: CurrentWeather (Sprint 3)    │
- * ├─────────────────────────────────────┤
- * │  WeatherStats (Sprint 3)            │
- * ├─────────────────────────────────────┤
- * │  HourlyForecast scroll (Sprint 4)   │
- * ├─────────────────────────────────────┤
- * │  Grid: DailyForecast │ AirQuality   │
- * │        (Sprint 4)    │ (Sprint 4)   │
- * ├─────────────────────────────────────┤
- * │  TemperatureChart (Sprint 4)        │
- * ├─────────────────────────────────────┤
- * │  WeatherAlerts (Sprint 4)           │
- * ├─────────────────────────────────────┤
- * │  Footer                             │
- * └─────────────────────────────────────┘
- */
 export default function HomePage() {
-  const [unit, setUnit] = useState<TemperatureUnit>("imperial")
-  const [city, setCity] = useState<string>("New York")
+  const { unit, setUnit } = useTemperatureUnit()
+  const {
+    data,
+    isLoading,
+    error,
+    currentCity,
+    fetchWeather,
+    refetch,
+    clearError,
+    clearData,
+  } = useWeather(unit)
+  const geo = useGeolocation()
 
-  const handleSearch = (searchedCity: string) => {
-    setCity(searchedCity)
+  // Auto-fetch cuando la geolocalización resuelve una ciudad
+  useEffect(() => {
+    if (geo.city && !currentCity && !isLoading) {
+      fetchWeather(geo.city)
+    }
+  }, [geo.city, currentCity, isLoading, fetchWeather])
+
+  // Re-fetch al cambiar unidad (solo si hay datos cargados)
+  useEffect(() => {
+    if (currentCity) refetch()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [unit])
+
+  const handleSearch = (city: string) => fetchWeather(city)
+
+  const handleUnitChange = (newUnit: TemperatureUnit) => setUnit(newUnit)
+
+  const handleRequestLocation = () => {
+    if (geo.city) fetchWeather(geo.city)
   }
 
-  const handleUnitChange = (newUnit: TemperatureUnit) => {
-    setUnit(newUnit)
-  }
+  // ─── Derivaciones del estado ────────────────────────────────────
+  const hasData = !!data.current
+  const showEmpty = !hasData && !isLoading && !error
+  const showError = !!error && !isLoading
 
   return (
     <div className="flex min-h-screen flex-col">
-      {/* ─── Header ────────────────────────────────────────────── */}
+
+      {/* ─── Header ──────────────────────────────────────────────── */}
       <Header
         unit={unit}
         onUnitChange={handleUnitChange}
         onSearch={handleSearch}
+        isSearchLoading={isLoading}
+        currentCity={currentCity}
       />
 
-      {/* ─── Main Content ───────────────────────────────────────── */}
-      <main className="flex-1">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 md:py-10">
+      {/* ─── Main Content ────────────────────────────────────────── */}
+      <main
+        className="flex-1"
+        aria-live="polite"
+        aria-busy={isLoading}
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 md:py-8">
 
-          {/* Estado vacío inicial */}
-          <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
-            <span className="text-6xl">🌤️</span>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
-              Welcome to WeatherBoard
-            </h1>
-            <p className="text-base md:text-lg text-muted-foreground max-w-md">
-              Real-time weather dashboard for US cities.
-              Search for a city to get started.
-            </p>
-            <div className="mt-2 rounded-md bg-muted px-4 py-2">
-              <p className="text-sm text-muted-foreground">
-                📍 Current city:{" "}
-                <span className="font-medium text-foreground">{city}</span>
-                {" · "}
-                <span className="font-medium text-foreground">
-                  {unit === "imperial" ? "°F" : "°C"}
-                </span>
-              </p>
-            </div>
+          {/* ── Empty State ───────────────────────────────────────── */}
+          {showEmpty && (
+            <EmptyState
+              onCitySelect={handleSearch}
+              onRequestLocation={geo.isSupported ? handleRequestLocation : undefined}
+            />
+          )}
 
-            {/* Placeholders de componentes — se implementan en Sprints 3 y 4 */}
-            <div className="w-full mt-8 grid gap-4">
-              {[
-                "CurrentWeather",
-                "WeatherStats",
-                "HourlyForecast",
-                "DailyForecast",
-                "TemperatureChart",
-                "WeatherAlerts",
-                "AirQuality",
-              ].map((component) => (
-                <div
-                  key={component}
-                  className="w-full rounded-lg border border-dashed border-border bg-muted/30 p-6 text-center"
-                >
-                  <p className="text-sm text-muted-foreground">
-                    🚧 <span className="font-mono">{component}</span> —
-                    implementation pending
-                  </p>
+          {/* ── Error State ───────────────────────────────────────── */}
+          {showError && (
+            <ErrorState
+              message={error}
+              onRetry={currentCity ? refetch : undefined}
+              onClear={() => { clearError(); clearData() }}
+            />
+          )}
+
+          {/* ── Loading State (Skeletons) ─────────────────────────── */}
+          {isLoading && (
+            <div className="flex flex-col gap-4 md:gap-6">
+              <CurrentWeatherSkeleton />
+              <WeatherStatsSkeleton />
+              <HourlyForecastSkeleton />
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+                <div className="lg:col-span-2">
+                  <DailyForecastSkeleton />
                 </div>
-              ))}
+                <AirQualitySkeleton />
+              </div>
+              <TemperatureChartSkeleton />
             </div>
-          </div>
+          )}
+
+          {/* ── Weather Dashboard ─────────────────────────────────── */}
+          {hasData && !isLoading && data.current && data.forecast && (
+            <div className="flex flex-col gap-4 md:gap-6">
+
+              {/* Fila 1: Clima actual */}
+              <CurrentWeather
+                data={data.current}
+                unit={unit}
+              />
+
+              {/* Fila 2: Stats secundarias */}
+              <WeatherStats
+                data={data.current}
+                unit={unit}
+              />
+
+              {/* Fila 3: Pronóstico horario */}
+              <HourlyForecast
+                data={data.forecast}
+                unit={unit}
+              />
+
+              {/* Fila 4: Grid — Forecast 5 días + Air Quality */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+                <div className="lg:col-span-2">
+                  <DailyForecast
+                    data={data.forecast}
+                    unit={unit}
+                  />
+                </div>
+                {data.airPollution && (
+                  <AirQuality data={data.airPollution} />
+                )}
+              </div>
+
+              {/* Fila 5: Gráfica de temperatura */}
+              <TemperatureChart
+                data={data.forecast}
+                unit={unit}
+              />
+
+              {/* Fila 6: Alertas (si existen) */}
+              <WeatherAlerts alerts={[]} />
+
+            </div>
+          )}
+
         </div>
       </main>
 
-      {/* ─── Footer ─────────────────────────────────────────────── */}
+      {/* ─── Footer ──────────────────────────────────────────────── */}
       <Footer />
     </div>
   )

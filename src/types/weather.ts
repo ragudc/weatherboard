@@ -119,3 +119,13 @@ export interface WeatherApiError {
 export type TemperatureUnit = "imperial" | "metric"
 // imperial → °F, mph (default para US)
 // metric   → °C, km/h
+
+// ─── Reverse Geocoding (/geo/1.0/reverse) ────────────────────────
+export interface GeocodingResult {
+  name: string
+  local_names?: Record<string, string>
+  lat: number
+  lon: number
+  country: string
+  state?: string
+}
