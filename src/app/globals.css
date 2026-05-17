@@ -170,6 +170,19 @@
     --aqi-5: 0   84% 65%;
 }
 
+/* ─── Color de temperatura en la card principal ──────────────────
+   Se inyecta --weather-accent como custom property vía inline style
+   para que la clase CSS (no el style) controle el color final.
+   Dark mode siempre fuerza text-foreground para garantizar contraste.
+──────────────────────────────────────────────────────────────────── */
+.weather-temp {
+  color: var(--weather-accent, var(--foreground));
+}
+
+.dark .weather-temp {
+  color: var(--foreground);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

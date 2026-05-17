@@ -1,3 +1,4 @@
+import type React from "react"
 import { motion } from "framer-motion"
 import { MapPin, ArrowUp, ArrowDown } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
@@ -120,8 +121,8 @@ export function CurrentWeather({ data, unit, className }: CurrentWeatherProps) {
 
               {/* Temperatura principal */}
               <p
-                className="text-6xl xs:text-7xl md:text-8xl font-extrabold tracking-tighter leading-none"
-                style={{ color: `var(${colorVar})` }}
+                className="weather-temp text-6xl xs:text-7xl md:text-8xl font-extrabold tracking-tighter leading-none"
+                style={{ '--weather-accent': `var(${colorVar})` } as React.CSSProperties}
                 aria-label={`Current temperature: ${formatTemperature(data.main.temp, unit)}`}
               >
                 {formatTemperature(data.main.temp, unit)}
