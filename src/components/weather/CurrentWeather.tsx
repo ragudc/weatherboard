@@ -90,7 +90,7 @@ export function CurrentWeather({ data, unit, className }: CurrentWeatherProps) {
         className="w-full overflow-hidden relative"
         style={{
           background: `radial-gradient(ellipse at top left,
-            hsl(var(${colorVar}) / 0.13) 0%,
+            color-mix(in oklch, var(${colorVar}) 13%, transparent) 0%,
             transparent 65%)`,
         }}
       >
@@ -121,7 +121,7 @@ export function CurrentWeather({ data, unit, className }: CurrentWeatherProps) {
               {/* Temperatura principal */}
               <p
                 className="text-6xl xs:text-7xl md:text-8xl font-extrabold tracking-tighter leading-none"
-                style={{ color: `hsl(var(${colorVar}))` }}
+                style={{ color: `var(${colorVar})` }}
                 aria-label={`Current temperature: ${formatTemperature(data.main.temp, unit)}`}
               >
                 {formatTemperature(data.main.temp, unit)}
