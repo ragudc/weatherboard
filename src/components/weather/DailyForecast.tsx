@@ -79,8 +79,8 @@ function TempRangeBar({
           width: `${Math.max(widthPct, 4)}%`,
           background: `linear-gradient(
             to right,
-            hsl(var(--primary) / 0.5),
-            hsl(var(--primary))
+            color-mix(in oklch, var(--primary) 50%, transparent),
+            var(--primary)
           )`,
         }}
       />

@@ -85,8 +85,8 @@ function CustomDot({ cx, cy, index }: CustomDotProps) {
       cx={cx}
       cy={cy}
       r={5}
-      fill="hsl(var(--primary))"
-      stroke="hsl(var(--background))"
+      fill="var(--primary)"
+      stroke="var(--background)"
       strokeWidth={2}
       aria-label="Current temperature"
     />
@@ -138,12 +138,12 @@ export function TemperatureChart({ data, unit, className }: TemperatureChartProp
                 <linearGradient id="tempGradient" x1="0" y1="0" x2="0" y2="1">
                   <stop
                     offset="5%"
-                    stopColor="hsl(var(--primary))"
+                    stopColor="var(--primary)"
                     stopOpacity={0.28}
                   />
                   <stop
                     offset="95%"
-                    stopColor="hsl(var(--primary))"
+                    stopColor="var(--primary)"
                     stopOpacity={0}
                   />
                 </linearGradient>
@@ -151,13 +151,13 @@ export function TemperatureChart({ data, unit, className }: TemperatureChartProp
 
               <CartesianGrid
                 strokeDasharray="3 3"
-                stroke="hsl(var(--border))"
+                stroke="var(--border)"
                 vertical={false}
               />
 
               <XAxis
                 dataKey="hour"
-                tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+                tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
                 tickLine={false}
                 axisLine={false}
                 interval="preserveStartEnd"
@@ -165,7 +165,7 @@ export function TemperatureChart({ data, unit, className }: TemperatureChartProp
 
               <YAxis
                 domain={[yMin, yMax]}
-                tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+                tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(v: number) => `${v}°`}
@@ -175,7 +175,7 @@ export function TemperatureChart({ data, unit, className }: TemperatureChartProp
               <Tooltip
                 content={<CustomTooltip />}
                 cursor={{
-                  stroke:          "hsl(var(--border))",
+                  stroke:          "var(--border)",
                   strokeWidth:     1,
                   strokeDasharray: "4 2",
                 }}
@@ -184,14 +184,14 @@ export function TemperatureChart({ data, unit, className }: TemperatureChartProp
               <Area
                 type="monotone"
                 dataKey="temp"
-                stroke="hsl(var(--primary))"
+                stroke="var(--primary)"
                 strokeWidth={2.5}
                 fill="url(#tempGradient)"
                 dot={<CustomDot />}
                 activeDot={{
                   r:           5,
-                  fill:        "hsl(var(--primary))",
-                  stroke:      "hsl(var(--background))",
+                  fill:        "var(--primary)",
+                  stroke:      "var(--background)",
                   strokeWidth: 2,
                 }}
                 isAnimationActive
