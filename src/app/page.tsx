@@ -15,7 +15,8 @@ import { AirQuality, AirQualitySkeleton } from "@/components/weather/AirQuality"
 import { useWeather } from "@/hooks/useWeather"
 import { useTemperatureUnit } from "@/hooks/useTemperatureUnit"
 import { useGeolocation } from "@/hooks/useGeolocation"
-import type { TemperatureUnit } from "@/types/weather"
+import { getDerivedAlerts } from "@/lib/weather-utils"
+import type { TemperatureUnit, WeatherAlert } from "@/types/weather"
 
 export default function HomePage() {
   const { unit, setUnit } = useTemperatureUnit()
@@ -53,6 +54,10 @@ export default function HomePage() {
   }
 
   // ─── Derivaciones del estado ────────────────────────────────────
+  const derivedAlerts: WeatherAlert[] = data.current
+    ? getDerivedAlerts(data.current, unit)
+    : []
+
   const hasData = !!data.current
   const showEmpty = !hasData && !isLoading && !error
   const showError = !!error && !isLoading
@@ -151,8 +156,11 @@ export default function HomePage() {
                 unit={unit}
               />
 
-              {/* Fila 6: Alertas (si existen) */}
-              <WeatherAlerts alerts={[]} />
+              {/* Fila 6: Alertas derivadas de condiciones extremas */}
+              <WeatherAlerts
+                alerts={derivedAlerts}
+                timezoneOffset={data.current?.timezone ?? 0}
+              />
 
             </div>
           )}

@@ -111,6 +111,13 @@
   --weather-snowy: oklch(0.78 0.08 215);       /* Azul claro para nieve */
   --weather-night: oklch(0.22 0.06 265);       /* Azul marino para noche */
   --weather-foggy: oklch(0.72 0.02 240);       /* Gris claro para niebla */
+
+    /* ─── Variables de AQI — Air Quality Index ──────────────────── */
+    --aqi-1: 142 71% 45%;    /* Good        — green      */
+    --aqi-2: 84  81% 44%;    /* Fair        — lime       */
+    --aqi-3: 45  93% 47%;    /* Moderate    — yellow     */
+    --aqi-4: 25  95% 53%;    /* Poor        — orange     */
+    --aqi-5: 0   84% 60%;    /* Very Poor   — red        */
 }
 
 .dark {
@@ -154,6 +161,13 @@
   --weather-snowy: oklch(0.82 0.08 215);
   --weather-night: oklch(0.15 0.06 265);
   --weather-foggy: oklch(0.55 0.02 240);
+
+    /* ─── Variables de AQI (dark mode) ─────────────────────────── */
+    --aqi-1: 142 71% 55%;
+    --aqi-2: 84  81% 54%;
+    --aqi-3: 45  93% 57%;
+    --aqi-4: 25  95% 63%;
+    --aqi-5: 0   84% 65%;
 }
 
 @layer base {

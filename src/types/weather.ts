@@ -129,3 +129,12 @@ export interface GeocodingResult {
   country: string
   state?: string
 }
+
+// ─── Weather Alert ────────────────────────────────────────────────
+export interface WeatherAlert {
+  event: string
+  description: string
+  severity: "advisory" | "watch" | "warning"
+  start: number
+  end: number
+}

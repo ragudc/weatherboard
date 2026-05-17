@@ -1,4 +1,4 @@
-import type { TemperatureUnit, ForecastItem } from "@/types/weather"
+import type { TemperatureUnit, ForecastItem, CurrentWeatherResponse, WeatherAlert } from "@/types/weather"
 
 // ─── Temperatura ──────────────────────────────────────────────────
 
@@ -295,4 +295,130 @@ export const formatCityDate = (timezoneOffset: number): string => {
     day: "numeric",
     timeZone: "UTC",
   })
+}
+
+// ─── Alertas derivadas ────────────────────────────────────────────
+
+export const getDerivedAlerts = (
+  data: CurrentWeatherResponse,
+  unit: TemperatureUnit
+): WeatherAlert[] => {
+  const alerts: WeatherAlert[] = []
+  const now  = Math.floor(Date.now() / 1000)
+  const end  = now + 7200 // 2 horas de vigencia estimada
+
+  const tempF = unit === "imperial"
+    ? data.main.temp
+    : (data.main.temp * 9) / 5 + 32
+
+  const windMph = unit === "imperial"
+    ? data.wind.speed
+    : data.wind.speed * 2.237
+
+  const condition  = data.weather[0]?.main ?? ""
+  const visibility = data.visibility
+
+  if (tempF >= 100) {
+    alerts.push({
+      event: "Extreme Heat Warning",
+      description:
+        "Dangerous heat conditions. Stay hydrated, avoid prolonged outdoor exposure, and check on vulnerable individuals.",
+      severity: "warning",
+      start: now,
+      end,
+    })
+  } else if (tempF >= 90) {
+    alerts.push({
+      event: "Heat Advisory",
+      description:
+        "High temperatures may cause heat-related illness. Drink plenty of fluids and avoid strenuous outdoor activities.",
+      severity: "advisory",
+      start: now,
+      end,
+    })
+  }
+
+  if (tempF <= 0) {
+    alerts.push({
+      event: "Extreme Cold Warning",
+      description:
+        "Life-threatening wind chills expected. Frostbite possible in minutes on exposed skin. Stay indoors if possible.",
+      severity: "warning",
+      start: now,
+      end,
+    })
+  } else if (tempF <= 20) {
+    alerts.push({
+      event: "Wind Chill Advisory",
+      description:
+        "Cold wind chills as low as 20°F below zero. Wear appropriate clothing in layers when outdoors.",
+      severity: "advisory",
+      start: now,
+      end,
+    })
+  }
+
+  if (windMph >= 58) {
+    alerts.push({
+      event: "High Wind Warning",
+      description:
+        "Damaging winds expected. Secure loose objects outdoors. Driving high-profile vehicles may be dangerous.",
+      severity: "warning",
+      start: now,
+      end,
+    })
+  } else if (windMph >= 31) {
+    alerts.push({
+      event: "Wind Advisory",
+      description:
+        "Sustained winds may cause minor property damage. Use caution while driving, especially high-profile vehicles.",
+      severity: "advisory",
+      start: now,
+      end,
+    })
+  }
+
+  if (visibility < 400) {
+    alerts.push({
+      event: "Dense Fog Warning",
+      description:
+        "Near-zero visibility conditions. Avoid travel if possible. If driving, use low-beam headlights and reduce speed.",
+      severity: "warning",
+      start: now,
+      end,
+    })
+  } else if (visibility < 1000) {
+    alerts.push({
+      event: "Dense Fog Advisory",
+      description:
+        "Visibility below 1 km. Allow extra travel time and increase following distance.",
+      severity: "advisory",
+      start: now,
+      end,
+    })
+  }
+
+  if (condition === "Thunderstorm") {
+    alerts.push({
+      event: "Thunderstorm Warning",
+      description:
+        "Active thunderstorm in the area. Seek shelter indoors immediately. Stay away from windows and metal objects.",
+      severity: "warning",
+      start: now,
+      end,
+    })
+  }
+
+  if (condition === "Tornado") {
+    alerts.push({
+      event: "Tornado Warning",
+      description:
+        "Tornado detected. Seek shelter immediately in an interior room on the lowest floor of a sturdy building.",
+      severity: "warning",
+      start: now,
+      end,
+    })
+  }
+
+  return alerts
 }
