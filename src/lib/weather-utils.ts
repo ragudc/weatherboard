@@ -255,3 +255,44 @@ export const groupForecastByDay = (
       }
     })
 }
+
+// ─── Feels Like Label ─────────────────────────────────────────────
+
+/**
+ * Interpreta la sensación térmica en una etiqueta descriptiva en inglés
+ * @example getFeelsLikeLabel(95, "imperial") → "Extremely Hot"
+ */
+export const getFeelsLikeLabel = (
+  feelsLike: number,
+  unit: TemperatureUnit
+): string => {
+  // Normalizar a Fahrenheit para comparación
+  const f = unit === "imperial" ? feelsLike : (feelsLike * 9) / 5 + 32
+
+  if (f <= 32)  return "Freezing"
+  if (f <= 49)  return "Cold"
+  if (f <= 59)  return "Cool"
+  if (f <= 69)  return "Comfortable"
+  if (f <= 79)  return "Warm"
+  if (f <= 89)  return "Hot"
+  if (f <= 99)  return "Very Hot"
+  return "Extremely Hot"
+}
+
+// ─── Fecha local de la ciudad ─────────────────────────────────────
+
+/**
+ * Formatea la fecha actual en el timezone de la ciudad consultada
+ * @param timezoneOffset - Offset en segundos desde UTC (viene de data.timezone)
+ * @example formatCityDate(-18000) → "Monday, May 18"
+ */
+export const formatCityDate = (timezoneOffset: number): string => {
+  const utcNow = Math.floor(Date.now() / 1000)
+  const cityLocalMs = (utcNow + timezoneOffset) * 1000
+  return new Date(cityLocalMs).toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  })
+}
