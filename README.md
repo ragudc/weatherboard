@@ -11,7 +11,7 @@ A beautiful, fast, and accessible weather dashboard for US cities — built with
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38bdf8?logo=tailwindcss)](https://tailwindcss.com)
 [![Vercel](https://img.shields.io/badge/Deployed-Vercel-black?logo=vercel)](https://vercel.com)
 
-[**Live Demo →**](https://weatherboard.vercel.app) · [Report Bug](https://github.com/ragudc/weatherboard/issues)
+[**Live Demo →**](https://weatherboard-steel.vercel.app) · [Report Bug](https://github.com/ragudc/weatherboard/issues)
 
 </div>
 
@@ -128,6 +128,8 @@ src/
 The easiest way to deploy WeatherBoard is with [Vercel](https://vercel.com):
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ragudc/weatherboard)
+
+> Live: [weatherboard-steel.vercel.app](https://weatherboard-steel.vercel.app)
 
 ### Manual Deploy
 
