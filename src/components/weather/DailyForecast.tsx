@@ -141,12 +141,12 @@ function DayRow({
       {/* Barra de temperatura */}
       <div className="flex items-center gap-2 min-w-0">
         {pop > 0.1 ? (
-          <span className="hidden xs:flex shrink-0 items-center gap-0.5 text-xs text-primary w-10">
+          <span className="hidden sm:flex shrink-0 items-center gap-0.5 text-xs text-primary w-10">
             <Droplets className="h-3 w-3" aria-hidden="true" />
             {formatPrecipitation(pop)}
           </span>
         ) : (
-          <span className="hidden xs:block w-10 shrink-0" />
+          <span className="hidden sm:block w-10 shrink-0" />
         )}
 
         <TempRangeBar

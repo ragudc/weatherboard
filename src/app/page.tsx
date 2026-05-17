@@ -15,6 +15,7 @@ import { AirQuality, AirQualitySkeleton } from "@/components/weather/AirQuality"
 import { useWeather } from "@/hooks/useWeather"
 import { useTemperatureUnit } from "@/hooks/useTemperatureUnit"
 import { useGeolocation } from "@/hooks/useGeolocation"
+import { useAutoTheme } from "@/hooks/useAutoTheme"
 import { getDerivedAlerts } from "@/lib/weather-utils"
 import type { TemperatureUnit, WeatherAlert } from "@/types/weather"
 
@@ -31,6 +32,9 @@ export default function HomePage() {
     clearData,
   } = useWeather(unit)
   const geo = useGeolocation()
+
+  // Auto dark/light según amanecer/atardecer de la ciudad cargada
+  useAutoTheme(data.current)
 
   // Auto-fetch cuando la geolocalización resuelve una ciudad
   useEffect(() => {

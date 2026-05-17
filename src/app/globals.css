@@ -113,11 +113,12 @@
   --weather-foggy: oklch(0.72 0.02 240);       /* Gris claro para niebla */
 
     /* ─── Variables de AQI — Air Quality Index ──────────────────── */
-    --aqi-1: 142 71% 45%;    /* Good        — green      */
-    --aqi-2: 84  81% 44%;    /* Fair        — lime       */
-    --aqi-3: 45  93% 47%;    /* Moderate    — yellow     */
-    --aqi-4: 25  95% 53%;    /* Poor        — orange     */
-    --aqi-5: 0   84% 60%;    /* Very Poor   — red        */
+    /* Darkened to meet WCAG AA 4.5:1 on white card background */
+    --aqi-1: 142 55% 25%;    /* Good        — dark green  */
+    --aqi-2: 84  65% 25%;    /* Fair        — dark olive  */
+    --aqi-3: 36  90% 30%;    /* Moderate    — deep amber  */
+    --aqi-4: 25  95% 33%;    /* Poor        — dark orange */
+    --aqi-5: 0   84% 42%;    /* Very Poor   — dark red    */
 }
 
 .dark {

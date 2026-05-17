@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { ThemeProvider } from "@/components/layout/ThemeProvider"
+import { Analytics } from "@vercel/analytics/react"
 import "./globals.css"
 
 /* ─── Fuentes ────────────────────────────────────────────────────── */
@@ -19,38 +20,43 @@ const geistMono = Geist_Mono({
 /* ─── Metadata SEO ───────────────────────────────────────────────── */
 export const metadata: Metadata = {
   title: {
-    default: "WeatherBoard — Real-Time US Weather Dashboard",
+    default:  "WeatherBoard — Real-Time US Weather Dashboard",
     template: "%s | WeatherBoard",
   },
   description:
-    "Beautiful real-time weather dashboard for US cities. Get hourly forecasts, 7-day outlooks, air quality index, and active weather alerts.",
+    "Beautiful real-time weather dashboard for US cities. Hourly forecasts, 7-day outlooks, air quality index, and smart weather alerts — powered by OpenWeatherMap.",
   keywords: [
     "weather dashboard",
-    "US weather",
-    "weather forecast",
+    "US weather forecast",
     "real-time weather",
-    "air quality",
+    "air quality index",
     "weather alerts",
+    "hourly forecast",
+    "weather app",
   ],
-  authors: [{ name: "WeatherBoard" }],
-  creator: "WeatherBoard",
+  authors:  [{ name: "WeatherBoard" }],
+  creator:  "WeatherBoard",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
+  ),
   openGraph: {
-    title: "WeatherBoard — Real-Time US Weather Dashboard",
-    description:
-      "Beautiful real-time weather forecasts for US cities with hourly updates.",
-    type: "website",
-    locale: "en_US",
-    siteName: "WeatherBoard",
+    title:       "WeatherBoard — Real-Time US Weather Dashboard",
+    description: "Beautiful real-time weather forecasts for US cities.",
+    type:        "website",
+    locale:      "en_US",
+    siteName:    "WeatherBoard",
   },
   twitter: {
-    card: "summary_large_image",
-    title: "WeatherBoard — Real-Time US Weather Dashboard",
+    card:        "summary_large_image",
+    title:       "WeatherBoard — Real-Time US Weather Dashboard",
     description: "Real-time weather forecasts for US cities.",
   },
   robots: {
-    index: true,
-    follow: true,
+    index:     true,
+    follow:    true,
+    googleBot: { index: true, follow: true },
   },
+  category: "technology",
 }
 
 export const viewport: Viewport = {
@@ -79,6 +85,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
